@@ -1,0 +1,88 @@
+name: Workshop Feedback
+description: Share your experience using MCP starters at a workshop or event
+title: "@[your-handle] | [event-name]"
+labels: ["feedback", "workshop"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying out the MCP starters! Your feedback helps improve these resources for everyone.
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language Used
+      description: Which starter repo did you use?
+      options:
+        - Go
+        - Python
+        - TypeScript
+        - C#
+        - Rust
+    validations:
+      required: true
+
+  - type: dropdown
+    id: preferred-language
+    attributes:
+      label: Preferred Language
+      description: If you'd prefer a different language, which one?
+      options:
+        - Same as above
+        - Go
+        - Python
+        - TypeScript
+        - C#
+        - Rust
+        - Other (mention in friction log)
+    validations:
+      required: false
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What did you build?
+      description: Brief description of the MCP server or idea you worked on
+      placeholder: "e.g., A tool that queries my company's internal docs..."
+    validations:
+      required: true
+
+  - type: input
+    id: repo-link
+    attributes:
+      label: Repo Link
+      description: Link to your project (only if open source)
+      placeholder: "https://github.com/..."
+    validations:
+      required: false
+
+  - type: input
+    id: company
+    attributes:
+      label: Where do you work?
+      description: Company or organization (optional)
+      placeholder: "Acme Corp"
+    validations:
+      required: false
+
+  - type: textarea
+    id: friction
+    attributes:
+      label: Friction Log
+      description: |
+        What didn't work? What was confusing? What would you improve?
+        Be as specific as possible - error messages, unclear docs, missing features, etc.
+      placeholder: |
+        - Ran into X error when trying to...
+        - The README didn't explain how to...
+        - Would be helpful to have...
+    validations:
+      required: false
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything else?
+      description: Other feedback, suggestions, or comments
+    validations:
+      required: false
