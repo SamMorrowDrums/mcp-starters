@@ -44,13 +44,28 @@ Every tool includes proper annotations:
 - `idempotentHint` - Safe to retry
 - `openWorldHint` - Accesses external systems
 
+## 🔄 Live Reload Development
+
+Each starter supports live reload for rapid development:
+
+| Language | Command | Tool | DevContainer |
+|----------|---------|------|--------------|
+| 🐹 Go | `air` | [air](https://github.com/air-verse/air) | Pre-installed |
+| 🐍 Python | `uv run mcp-python-starter` | Python auto-reload | Pre-installed |
+| 📘 TypeScript | `npm run dev` | tsx watch | Pre-installed |
+| 💜 C# | `dotnet watch run` | .NET Hot Reload | Built-in |
+| 🦀 Rust | `cargo watch -x 'run --bin mcp-rust-starter-stdio'` | [cargo-watch](https://crates.io/crates/cargo-watch) | Pre-installed |
+
+All DevContainers come with live reload tools pre-installed for immediate development.
+
 ## 🚀 Quick Start
 
 ### Go
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-go-starter
 cd mcp-go-starter
-make run-stdio
+air  # Live reload development
+# Or: make run-stdio
 ```
 
 ### Python
@@ -64,21 +79,22 @@ uv run mcp-python-starter --stdio
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-typescript-starter
 cd mcp-typescript-starter
-npm install && npm run stdio
+npm install && npm run dev  # Live reload development
 ```
 
 ### C#
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-csharp-starter
 cd mcp-csharp-starter
-dotnet run
+dotnet watch run  # Live reload development
 ```
 
 ### Rust
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-rust-starter
 cd mcp-rust-starter
-cargo run
+cargo watch -x 'run --bin mcp-rust-starter-stdio'  # Live reload development
+# Or: cargo run --bin mcp-rust-starter-stdio
 ```
 
 ## 📋 Feature Matrix
@@ -97,6 +113,7 @@ cargo run
 | Prompts | ✅ | ✅ | ✅ | ✅ | ✅ |
 | stdio Transport | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTTP Transport | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Live Reload Dev | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Server Instructions | ✅ | ✅ | ✅ | ✅ | ✅ |
 | DevContainer | ✅ | ✅ | ✅ | ✅ | ✅ |
 | AGENTS.md | ✅ | ✅ | ✅ | ✅ | ✅ |
