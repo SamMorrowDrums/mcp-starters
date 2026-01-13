@@ -22,19 +22,12 @@ body:
     validations:
       required: true
 
-  - type: dropdown
+  - type: input
     id: preferred-language
     attributes:
       label: Preferred Language
-      description: If you'd prefer a different language, which one?
-      options:
-        - Same as above
-        - Go
-        - Python
-        - TypeScript
-        - C#
-        - Rust
-        - Other (mention in friction log)
+      description: If you'd prefer a starter in a different language, which one?
+      placeholder: "e.g., Kotlin, Swift, Elixir, OCaml..."
     validations:
       required: false
 
