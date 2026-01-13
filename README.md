@@ -6,8 +6,8 @@ Feature-complete **Model Context Protocol** (MCP) server implementations across 
 
 | Language | Repository | SDK | Features |
 |----------|------------|-----|----------|
-| 🐹 **Go** | [mcp-go-starter](https://github.com/SamMorrowDrums/mcp-go-starter) | [go-sdk](https://github.com/modelcontextprotocol/go-sdk) | Tools with icons, sampling, progress, dynamic loading |
-| 🐍 **Python** | [mcp-python-starter](https://github.com/SamMorrowDrums/mcp-python-starter) | [python-sdk](https://github.com/modelcontextprotocol/python-sdk) | FastMCP, tools with icons, sampling, progress |
+| 🐹 **Go** | [mcp-go-starter](https://github.com/SamMorrowDrums/mcp-go-starter) | [go-sdk](https://github.com/modelcontextprotocol/go-sdk) | Tools with icons, sampling, progress, elicitation |
+| 🐍 **Python** | [mcp-python-starter](https://github.com/SamMorrowDrums/mcp-python-starter) | [python-sdk](https://github.com/modelcontextprotocol/python-sdk) | FastMCP, tools with icons, sampling, elicitation |
 | 📘 **TypeScript** | [mcp-typescript-starter](https://github.com/SamMorrowDrums/mcp-typescript-starter) | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | Zod schemas, annotations, dynamic tools |
 | 💜 **C#** | [mcp-csharp-starter](https://github.com/SamMorrowDrums/mcp-csharp-starter) | [csharp-sdk](https://github.com/modelcontextprotocol/csharp-sdk) | Attribute-based, DI, HTTP/stdio |
 | 🦀 **Rust** | [mcp-rust-starter](https://github.com/SamMorrowDrums/mcp-rust-starter) | [rmcp](https://crates.io/crates/rmcp) | Macro-based, async, type-safe |
@@ -23,6 +23,11 @@ All starters demonstrate:
 - **long_task** - Progress reporting
 - **load_bonus_tool** - Dynamic tool registration
 - **bonus_calculator** - Dynamically loaded tool
+
+### 🗣️ Elicitation (User Input)
+Request information from users during tool execution:
+- **confirm_action** - Schema elicitation with form fields
+- **get_feedback** - URL elicitation opening browser to feedback form
 
 ### 📚 Resources
 - Static resources (server info, example files)
@@ -85,6 +90,8 @@ cargo run
 | LLM Sampling | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Progress Reporting | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Dynamic Tool Loading | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Elicitation (Form) | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Elicitation (URL) | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Resources | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Resource Templates | ✅ | ✅ | ✅ | ❌ | ✅ |
 | Prompts | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -98,12 +105,17 @@ cargo run
 
 - [MCP Specification](https://modelcontextprotocol.io/)
 - [MCP Tools Documentation](https://modelcontextprotocol.io/docs/concepts/tools)
+- [MCP Elicitation Documentation](https://modelcontextprotocol.io/docs/concepts/elicitation)
 - [MCP Resources Documentation](https://modelcontextprotocol.io/docs/concepts/resources)
 - [MCP Prompts Documentation](https://modelcontextprotocol.io/docs/concepts/prompts)
 
 ## 🤝 Contributing
 
 Contributions are welcome! Each repository has its own contributing guidelines. General improvements or new language implementations can be proposed via issues.
+
+### Workshop Feedback
+
+Used these starters at a workshop or event? [Submit feedback](https://github.com/SamMorrowDrums/mcp-starters/issues/new?template=workshop-feedback.yml) to help improve them!
 
 ## 📄 License
 
