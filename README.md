@@ -86,7 +86,7 @@ Request information from users during tool execution:
 |---------|:--:|:------:|:----------:|:--:|:----:|:---:|:------:|
 | **DevContainer** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Live Reload** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **AGENTS.md** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **AGENTS.md** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | **VS Code Tasks** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **CI Workflow** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Conformance Test** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
