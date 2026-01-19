@@ -11,6 +11,8 @@ Feature-complete **Model Context Protocol** (MCP) server implementations across 
 | 📘 **TypeScript** | [mcp-typescript-starter](https://github.com/SamMorrowDrums/mcp-typescript-starter) | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | Zod schemas, annotations, dynamic tools |
 | 💜 **C#** | [mcp-csharp-starter](https://github.com/SamMorrowDrums/mcp-csharp-starter) | [csharp-sdk](https://github.com/modelcontextprotocol/csharp-sdk) | Attribute-based, DI, HTTP/stdio |
 | 🦀 **Rust** | [mcp-rust-starter](https://github.com/SamMorrowDrums/mcp-rust-starter) | [rmcp](https://crates.io/crates/rmcp) | Macro-based, async, type-safe |
+| 🐘 **PHP** | [mcp-php-starter](https://github.com/SamMorrowDrums/mcp-php-starter) | [php-sdk](https://github.com/modelcontextprotocol/php-sdk) | Attribute-based discovery, async support |
+| 🟣 **Kotlin** | [mcp-kotlin-starter](https://github.com/SamMorrowDrums/mcp-kotlin-starter) | [kotlin-sdk](https://github.com/modelcontextprotocol/kotlin-sdk) | Coroutines, Ktor HTTP, type-safe DSL |
 
 ## ✨ Common Features
 
@@ -55,6 +57,8 @@ Each starter supports live reload for rapid development:
 | 📘 TypeScript | `npm run dev` | tsx watch | Pre-installed |
 | 💜 C# | `dotnet watch run` | .NET Hot Reload | Built-in |
 | 🦀 Rust | `cargo watch -x 'run --bin mcp-rust-starter-stdio'` | [cargo-watch](https://crates.io/crates/cargo-watch) | Pre-installed |
+| 🐘 PHP | `composer run-script dev` | PHP built-in server | Pre-installed |
+| 🟣 Kotlin | `./gradlew runStdio --continuous` | Gradle continuous | Pre-installed |
 
 All DevContainers come with live reload tools pre-installed for immediate development.
 
@@ -97,26 +101,42 @@ cargo watch -x 'run --bin mcp-rust-starter-stdio'  # Live reload development
 # Or: cargo run --bin mcp-rust-starter-stdio
 ```
 
+### PHP
+```bash
+git clone https://github.com/SamMorrowDrums/mcp-php-starter
+cd mcp-php-starter
+composer install
+php bin/server.php  # stdio mode
+```
+
+### Kotlin
+```bash
+git clone https://github.com/SamMorrowDrums/mcp-kotlin-starter
+cd mcp-kotlin-starter
+./gradlew fatJar
+java -jar build/libs/mcp-kotlin-starter-1.0.0-all.jar  # stdio mode
+```
+
 ## 📋 Feature Matrix
 
-| Feature | Go | Python | TypeScript | C# | Rust |
-|---------|:--:|:------:|:----------:|:--:|:----:|
-| Tool Annotations | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Tool Icons (base64) | ✅ | ✅ | ❌ | ❌ | ❌ |
-| LLM Sampling | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Progress Reporting | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Dynamic Tool Loading | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Elicitation (Form) | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Elicitation (URL) | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Resources | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Resource Templates | ✅ | ✅ | ✅ | ❌ | ✅ |
-| Prompts | ✅ | ✅ | ✅ | ✅ | ✅ |
-| stdio Transport | ✅ | ✅ | ✅ | ✅ | ✅ |
-| HTTP Transport | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Live Reload Dev | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Server Instructions | ✅ | ✅ | ✅ | ✅ | ✅ |
-| DevContainer | ✅ | ✅ | ✅ | ✅ | ✅ |
-| AGENTS.md | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Feature | Go | Python | TypeScript | C# | Rust | PHP | Kotlin |
+|---------|:--:|:------:|:----------:|:--:|:----:|:---:|:------:|
+| Tool Annotations | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Tool Icons (base64) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| LLM Sampling | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Progress Reporting | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Dynamic Tool Loading | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Elicitation (Form) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Elicitation (URL) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Resources | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Resource Templates | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Prompts | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| stdio Transport | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| HTTP Transport | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
+| Live Reload Dev | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Server Instructions | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| DevContainer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| AGENTS.md | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## 📖 Documentation
 
