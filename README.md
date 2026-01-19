@@ -8,59 +8,100 @@ Feature-complete **Model Context Protocol** (MCP) server implementations across 
 |----------|------------|-----|----------|
 | 🐹 **Go** | [mcp-go-starter](https://github.com/SamMorrowDrums/mcp-go-starter) | [go-sdk](https://github.com/modelcontextprotocol/go-sdk) | Tools with icons, sampling, progress, elicitation |
 | 🐍 **Python** | [mcp-python-starter](https://github.com/SamMorrowDrums/mcp-python-starter) | [python-sdk](https://github.com/modelcontextprotocol/python-sdk) | FastMCP, tools with icons, sampling, elicitation |
-| 📘 **TypeScript** | [mcp-typescript-starter](https://github.com/SamMorrowDrums/mcp-typescript-starter) | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | Zod schemas, annotations, dynamic tools |
-| 💜 **C#** | [mcp-csharp-starter](https://github.com/SamMorrowDrums/mcp-csharp-starter) | [csharp-sdk](https://github.com/modelcontextprotocol/csharp-sdk) | Attribute-based, DI, HTTP/stdio |
-| 🦀 **Rust** | [mcp-rust-starter](https://github.com/SamMorrowDrums/mcp-rust-starter) | [rmcp](https://crates.io/crates/rmcp) | Macro-based, async, type-safe |
-| 🐘 **PHP** | [mcp-php-starter](https://github.com/SamMorrowDrums/mcp-php-starter) | [php-sdk](https://github.com/modelcontextprotocol/php-sdk) | Attribute-based discovery, async support |
+| 📘 **TypeScript** | [mcp-typescript-starter](https://github.com/SamMorrowDrums/mcp-typescript-starter) | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | Zod schemas, sampling, progress, elicitation |
+| 💜 **C#** | [mcp-csharp-starter](https://github.com/SamMorrowDrums/mcp-csharp-starter) | [csharp-sdk](https://github.com/modelcontextprotocol/csharp-sdk) | Attribute-based, icons, sampling, elicitation |
+| 🦀 **Rust** | [mcp-rust-starter](https://github.com/SamMorrowDrums/mcp-rust-starter) | [rmcp](https://crates.io/crates/rmcp) | Macro-based, async, resource templates |
+| 🐘 **PHP** | [mcp-php-starter](https://github.com/SamMorrowDrums/mcp-php-starter) | [php-sdk](https://github.com/modelcontextprotocol/php-sdk) | Attribute-based discovery, HTTP/stdio |
 | 🟣 **Kotlin** | [mcp-kotlin-starter](https://github.com/SamMorrowDrums/mcp-kotlin-starter) | [kotlin-sdk](https://github.com/modelcontextprotocol/kotlin-sdk) | Coroutines, Ktor HTTP, type-safe DSL |
 
 ## ✨ Common Features
 
-All starters demonstrate:
+All starters demonstrate core MCP capabilities:
 
 ### 🔧 Tools
-- **hello** - Basic greeting with annotations
+- **hello** - Basic greeting tool
 - **get_weather** - Structured output (simulated)
-- **ask_llm** - LLM sampling/completion
-- **long_task** - Progress reporting
-- **load_bonus_tool** - Dynamic tool registration
-- **bonus_calculator** - Dynamically loaded tool
-
-### 🗣️ Elicitation (User Input)
-Request information from users during tool execution:
-- **confirm_action** - Schema elicitation with form fields
-- **get_feedback** - URL elicitation opening browser to feedback form
+- **calculate** - Arithmetic operations
+- **echo** - Echo messages back
 
 ### 📚 Resources
 - Static resources (server info, example files)
-- Resource templates with URI parameters
+- Configuration data
 
 ### 💬 Prompts
-- **greeting** - Personalized greeting generation
+- **greet** - Personalized greeting generation
 - **code_review** - Structured code review template
 
+## ⚡ Advanced Features (Mature SDKs)
+
+The Go, Python, TypeScript, and C# starters include advanced MCP features:
+
 ### 🏷️ Tool Annotations
-Every tool includes proper annotations:
 - `readOnlyHint` - Tool doesn't modify state
 - `destructiveHint` - Tool can delete/modify data
 - `idempotentHint` - Safe to retry
 - `openWorldHint` - Accesses external systems
 
+### 🤖 LLM Sampling
+- **ask_llm** - Tool that invokes LLM sampling/completion
+
+### 📊 Progress Reporting
+- **long_task** - Demonstrates progress notifications during execution
+
+### 🔄 Dynamic Tool Loading
+- **load_bonus_tool** - Dynamically registers new tools at runtime
+- **bonus_calculator** - Tool added via `tools/list_changed`
+
+### 🗣️ Elicitation (User Input)
+Request information from users during tool execution:
+- **confirm_action** - Schema elicitation with form fields
+- **get_feedback** - URL elicitation opening browser
+
+### 📂 Resource Templates
+- URI templates with parameters (e.g., `data://items/{id}`)
+
+## 📋 MCP Protocol Feature Matrix
+
+| Feature | Go | Python | TypeScript | C# | Rust | PHP | Kotlin |
+|---------|:--:|:------:|:----------:|:--:|:----:|:---:|:------:|
+| **Tools** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Resources** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Prompts** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Tool Annotations** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Tool Icons** | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| **LLM Sampling** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| **Progress Reporting** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| **Dynamic Tool Loading** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| **Elicitation (Form)** | ✅ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ❌ |
+| **Elicitation (URL)** | ✅ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ❌ |
+| **Resource Templates** | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| **stdio Transport** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **HTTP Transport** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+**Legend:** ✅ Implemented | ❌ Not implemented | ⚠️ Placeholder/stub
+
+## 🛠️ Repository Feature Matrix
+
+| Feature | Go | Python | TypeScript | C# | Rust | PHP | Kotlin |
+|---------|:--:|:------:|:----------:|:--:|:----:|:---:|:------:|
+| **DevContainer** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Live Reload** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **AGENTS.md** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **VS Code Tasks** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **CI Workflow** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Conformance Test** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
 ## 🔄 Live Reload Development
 
-Each starter supports live reload for rapid development:
-
-| Language | Command | Tool | DevContainer |
-|----------|---------|------|--------------|
-| 🐹 Go | `air` | [air](https://github.com/air-verse/air) | Pre-installed |
-| 🐍 Python | `uv run mcp-python-starter` | Python auto-reload | Pre-installed |
-| 📘 TypeScript | `npm run dev` | tsx watch | Pre-installed |
-| 💜 C# | `dotnet watch run` | .NET Hot Reload | Built-in |
-| 🦀 Rust | `cargo watch -x 'run --bin mcp-rust-starter-stdio'` | [cargo-watch](https://crates.io/crates/cargo-watch) | Pre-installed |
-| 🐘 PHP | `composer run-script dev` | PHP built-in server | Pre-installed |
-| 🟣 Kotlin | `./gradlew runStdio --continuous` | Gradle continuous | Pre-installed |
-
-All DevContainers come with live reload tools pre-installed for immediate development.
+| Language | Command | Tool |
+|----------|---------|------|
+| 🐹 Go | `air` | [air](https://github.com/air-verse/air) |
+| 🐍 Python | `uv run mcp-python-starter` | uv auto-reload |
+| 📘 TypeScript | `npm run dev` | tsx watch |
+| 💜 C# | `dotnet watch run` | .NET Hot Reload |
+| 🦀 Rust | `cargo watch -x 'run --bin mcp-rust-starter-stdio'` | [cargo-watch](https://crates.io/crates/cargo-watch) |
+| 🐘 PHP | `composer run-script dev` | PHP built-in server |
+| 🟣 Kotlin | `./gradlew runStdio --continuous` | Gradle continuous |
 
 ## 🚀 Quick Start
 
@@ -69,7 +110,6 @@ All DevContainers come with live reload tools pre-installed for immediate develo
 git clone https://github.com/SamMorrowDrums/mcp-go-starter
 cd mcp-go-starter
 air  # Live reload development
-# Or: make run-stdio
 ```
 
 ### Python
@@ -83,22 +123,21 @@ uv run mcp-python-starter --stdio
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-typescript-starter
 cd mcp-typescript-starter
-npm install && npm run dev  # Live reload development
+npm install && npm run dev
 ```
 
 ### C#
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-csharp-starter
 cd mcp-csharp-starter
-dotnet watch run  # Live reload development
+dotnet watch run
 ```
 
 ### Rust
 ```bash
 git clone https://github.com/SamMorrowDrums/mcp-rust-starter
 cd mcp-rust-starter
-cargo watch -x 'run --bin mcp-rust-starter-stdio'  # Live reload development
-# Or: cargo run --bin mcp-rust-starter-stdio
+cargo run --bin mcp-rust-starter-stdio
 ```
 
 ### PHP
@@ -106,7 +145,7 @@ cargo watch -x 'run --bin mcp-rust-starter-stdio'  # Live reload development
 git clone https://github.com/SamMorrowDrums/mcp-php-starter
 cd mcp-php-starter
 composer install
-php bin/server.php  # stdio mode
+php bin/server-stdio.php
 ```
 
 ### Kotlin
@@ -114,29 +153,8 @@ php bin/server.php  # stdio mode
 git clone https://github.com/SamMorrowDrums/mcp-kotlin-starter
 cd mcp-kotlin-starter
 ./gradlew fatJar
-java -jar build/libs/mcp-kotlin-starter-1.0.0-all.jar  # stdio mode
+java -jar build/libs/mcp-kotlin-starter-1.0.0-all.jar
 ```
-
-## 📋 Feature Matrix
-
-| Feature | Go | Python | TypeScript | C# | Rust | PHP | Kotlin |
-|---------|:--:|:------:|:----------:|:--:|:----:|:---:|:------:|
-| Tool Annotations | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Tool Icons (base64) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| LLM Sampling | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Progress Reporting | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Dynamic Tool Loading | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Elicitation (Form) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Elicitation (URL) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Resources | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Resource Templates | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| Prompts | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| stdio Transport | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| HTTP Transport | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
-| Live Reload Dev | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Server Instructions | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| DevContainer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| AGENTS.md | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## 📖 Documentation
 
