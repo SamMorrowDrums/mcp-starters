@@ -1,0 +1,253 @@
+name: Cross-Server Diff
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly on Monday at 9am UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    outputs:
+      has_diffs: ${{ steps.diff.outputs.has_diffs }}
+      diff_hash: ${{ steps.diff.outputs.diff_hash }}
+
+    steps:
+      - name: Checkout mcp-starters
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Clone starter repos
+        run: |
+          mkdir -p repos
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-python-starter repos/python
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-typescript-starter repos/typescript
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-go-starter repos/go
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-rust-starter repos/rust
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-csharp-starter repos/csharp
+
+      - name: Build Python server
+        run: |
+          cd repos/python
+          pip install -e .
+
+      - name: Build TypeScript server
+        run: |
+          cd repos/typescript
+          npm ci
+          npm run build
+
+      - name: Build Go server
+        run: |
+          cd repos/go
+          go build -o bin/server ./cmd/stdio
+
+      - name: Build Rust server
+        run: |
+          cd repos/rust
+          cargo build --release
+
+      - name: Build C# server
+        run: |
+          cd repos/csharp
+          dotnet build -c Release
+
+      - name: Create diff config
+        run: |
+          cat > diff-config.json << 'EOF'
+          {
+            "base": {
+              "name": "python",
+              "transport": "stdio",
+              "start_command": "python -m mcp_starter_server"
+            },
+            "targets": [
+              {
+                "name": "typescript",
+                "transport": "stdio",
+                "start_command": "node repos/typescript/dist/stdio.js"
+              },
+              {
+                "name": "go",
+                "transport": "stdio",
+                "start_command": "repos/go/bin/server"
+              },
+              {
+                "name": "rust",
+                "transport": "stdio",
+                "start_command": "repos/rust/target/release/mcp-rust-starter"
+              },
+              {
+                "name": "csharp",
+                "transport": "stdio",
+                "start_command": "dotnet run --project repos/csharp --no-build -c Release"
+              }
+            ]
+          }
+          EOF
+
+      - name: Run cross-server diff
+        id: diff
+        run: |
+          # Run diff and capture output
+          set +e
+          npx mcp-server-diff@latest -c diff-config.json -o json -q > diff-output.json 2>&1
+          exit_code=$?
+          set -e
+          
+          # Parse results
+          if [ $exit_code -eq 0 ]; then
+            echo "has_diffs=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_diffs=true" >> $GITHUB_OUTPUT
+          fi
+          
+          # Create hash of diff content for comparison
+          diff_hash=$(cat diff-output.json | sha256sum | cut -d' ' -f1)
+          echo "diff_hash=$diff_hash" >> $GITHUB_OUTPUT
+          
+          # Generate markdown report
+          npx mcp-server-diff@latest -c diff-config.json -o markdown -q > diff-report.md 2>&1 || true
+          
+          # Add to step summary
+          cat diff-report.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload diff report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-server-diff-report
+          path: |
+            diff-output.json
+            diff-report.md
+
+  manage-issue:
+    needs: diff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find existing issue
+        id: find_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'cross-server-diff',
+              per_page: 1
+            });
+            
+            if (issues.data.length > 0) {
+              core.setOutput('issue_number', issues.data[0].number);
+              core.setOutput('issue_body_hash', require('crypto')
+                .createHash('sha256')
+                .update(issues.data[0].body || '')
+                .digest('hex'));
+            } else {
+              core.setOutput('issue_number', '');
+              core.setOutput('issue_body_hash', '');
+            }
+
+      - name: Download diff report
+        if: needs.diff.outputs.has_diffs == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: cross-server-diff-report
+
+      - name: Create or update issue
+        if: needs.diff.outputs.has_diffs == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('diff-report.md', 'utf8');
+            
+            const issueBody = `## Cross-Server Interface Differences
+            
+            This issue is automatically created when MCP starter servers have interface differences compared to the Python reference implementation.
+
+            ${report}
+            
+            ---
+            *Last updated: ${new Date().toISOString()}*
+            *Diff hash: ${{ needs.diff.outputs.diff_hash }}*
+            `;
+            
+            const existingIssue = '${{ steps.find_issue.outputs.issue_number }}';
+            const existingHash = '${{ steps.find_issue.outputs.issue_body_hash }}';
+            const newHash = '${{ needs.diff.outputs.diff_hash }}';
+            
+            if (existingIssue && existingHash !== newHash) {
+              // Close old issue and create new one (content changed)
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parseInt(existingIssue),
+                state: 'closed',
+                state_reason: 'not_planned'
+              });
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔄 Cross-Server Interface Differences Detected',
+                body: issueBody,
+                labels: ['cross-server-diff']
+              });
+            } else if (!existingIssue) {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔄 Cross-Server Interface Differences Detected',
+                body: issueBody,
+                labels: ['cross-server-diff']
+              });
+            }
+            // If existingHash === newHash, do nothing (no change)
+
+      - name: Close issue if no diffs
+        if: needs.diff.outputs.has_diffs == 'false' && steps.find_issue.outputs.issue_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: parseInt('${{ steps.find_issue.outputs.issue_number }}'),
+              state: 'closed',
+              state_reason: 'completed'
+            });
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: parseInt('${{ steps.find_issue.outputs.issue_number }}'),
+              body: '✅ All servers now have matching interfaces! Closing this issue.'
+            });
