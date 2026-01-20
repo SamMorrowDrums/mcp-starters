@@ -43,6 +43,17 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Setup Java (for Kotlin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
       - name: Clone starter repos
         run: |
           mkdir -p repos
@@ -51,6 +62,8 @@ jobs:
           git clone --depth 1 https://github.com/SamMorrowDrums/mcp-go-starter repos/go
           git clone --depth 1 https://github.com/SamMorrowDrums/mcp-rust-starter repos/rust
           git clone --depth 1 https://github.com/SamMorrowDrums/mcp-csharp-starter repos/csharp
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-kotlin-starter repos/kotlin
+          git clone --depth 1 https://github.com/SamMorrowDrums/mcp-php-starter repos/php
 
       - name: Build Python server
         run: |
@@ -78,9 +91,19 @@ jobs:
           cd repos/csharp
           dotnet build -c Release
 
+      - name: Build Kotlin server
+        run: |
+          cd repos/kotlin
+          ./gradlew build
+
+      - name: Build PHP server
+        run: |
+          cd repos/php
+          composer install --no-dev
+
       - name: Create diff config
         run: |
-          cat > diff-config.json << 'EOF'
+          cat > diff-config.json << 'EOFCONFIG'
           {
             "base": {
               "name": "python",
@@ -101,16 +124,26 @@ jobs:
               {
                 "name": "rust",
                 "transport": "stdio",
-                "start_command": "repos/rust/target/release/mcp-rust-starter"
+                "start_command": "repos/rust/target/release/mcp-rust-starter-stdio"
               },
               {
                 "name": "csharp",
                 "transport": "stdio",
                 "start_command": "dotnet run --project repos/csharp --no-build -c Release"
+              },
+              {
+                "name": "kotlin",
+                "transport": "stdio",
+                "start_command": "repos/kotlin/gradlew -p repos/kotlin runStdio -q --console=plain"
+              },
+              {
+                "name": "php",
+                "transport": "stdio",
+                "start_command": "php repos/php/bin/server-stdio.php"
               }
             ]
           }
-          EOF
+          EOFCONFIG
 
       - name: Run cross-server diff
         id: diff
