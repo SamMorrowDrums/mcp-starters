@@ -89,7 +89,7 @@ Request information from users during tool execution:
 | **AGENTS.md** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | **VS Code Tasks** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **CI Workflow** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Conformance Test** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **MCP Server Diff** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## 🔄 Live Reload Development
 
