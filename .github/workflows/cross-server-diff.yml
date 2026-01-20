@@ -43,11 +43,14 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Setup Java (for Kotlin)
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -94,7 +97,7 @@ jobs:
       - name: Build Kotlin server
         run: |
           cd repos/kotlin
-          ./gradlew build
+          gradle build --no-daemon
 
       - name: Build PHP server
         run: |
@@ -134,7 +137,7 @@ jobs:
               {
                 "name": "kotlin",
                 "transport": "stdio",
-                "start_command": "repos/kotlin/gradlew -p repos/kotlin runStdio -q --console=plain"
+                "start_command": "gradle -p repos/kotlin runStdio -q --console=plain --no-daemon"
               },
               {
                 "name": "php",
