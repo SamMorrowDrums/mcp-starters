@@ -85,7 +85,7 @@ jobs:
             "base": {
               "name": "python",
               "transport": "stdio",
-              "start_command": "python -m mcp_starter_server"
+              "start_command": "mcp-python-starter"
             },
             "targets": [
               {
