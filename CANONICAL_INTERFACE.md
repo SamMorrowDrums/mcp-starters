@@ -9,12 +9,13 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **`title`**: Human-readable name (e.g., "Get Weather")
 - **`description`**: Model-readable explanation
 - **`annotations`**: Metadata hints for clients (e.g., `readOnlyHint`, `destructiveHint`)
-- **`outputSchema`**: (Optional) JSON Schema describing the tool's return value
+- **`outputSchema`**: (Optional) JSON Schema describing the tool's return value - SDK dependent
 
 ### Input Schema Properties
-- Use `description` field only (NOT `title`)
+- Use `description` field (NOT `title`) for property descriptions
 - Use `camelCase` for parameter names (e.g., `taskName`, `maxTokens`)
 - Include `default` values where applicable
+- Note: `title` on properties is SDK-dependent and optional
 
 ### Icons
 Tools should include icons as PNG files stored in the repository (e.g., `icons/hello.png`). At application startup, serialize these to data URIs:
@@ -23,22 +24,7 @@ Tools should include icons as PNG files stored in the repository (e.g., `icons/h
 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
 ```
 
-Use consistent icon files across all implementations:
-
-| Tool | Icon File | Suggested Image |
-|------|-----------|-----------------|
-| `hello` | `icons/hello.png` | Waving hand |
-| `get_weather` | `icons/weather.png` | Sun/cloud |
-| `long_task` | `icons/task.png` | Hourglass/timer |
-| `load_bonus_tool` | `icons/bonus.png` | Wrench/tool |
-| `ask_llm` | `icons/llm.png` | Robot/brain |
-| `confirm_action` | `icons/confirm.png` | Checkmark |
-| `get_feedback` | `icons/feedback.png` | Speech bubble |
-
-Icons should be:
-- 32x32 or 64x64 pixels
-- PNG format with transparency
-- Loaded once at startup and cached as data URIs
+Icons are **optional** - if your SDK doesn't easily support them, omit.
 
 ---
 
@@ -46,9 +32,9 @@ Icons should be:
 
 ### 1. hello
 - **Name:** `hello`
-- **Title:** `Hello`
+- **Title:** `Say Hello`
 - **Description:** `Say hello to a person`
-- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -67,7 +53,7 @@ Icons should be:
 - **Name:** `get_weather`
 - **Title:** `Get Weather`
 - **Description:** `Get the current weather for a city`
-- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -81,33 +67,12 @@ Icons should be:
   "required": ["city"]
 }
 ```
-- **Output Schema:**
-```json
-{
-  "type": "object",
-  "properties": {
-    "city": {
-      "type": "string",
-      "description": "City name"
-    },
-    "temperature": {
-      "type": "number",
-      "description": "Temperature in Celsius"
-    },
-    "conditions": {
-      "type": "string",
-      "description": "Weather conditions description"
-    }
-  },
-  "required": ["city", "temperature", "conditions"]
-}
-```
 
 ### 3. long_task
 - **Name:** `long_task`
-- **Title:** `Long Task`
+- **Title:** `Long Running Task`
 - **Description:** `Simulate a long-running task with progress updates`
-- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -131,7 +96,7 @@ Icons should be:
 - **Name:** `load_bonus_tool`
 - **Title:** `Load Bonus Tool`
 - **Description:** `Dynamically register a new bonus tool`
-- **Annotations:** `{ readOnlyHint: false, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -145,7 +110,7 @@ Icons should be:
 - **Name:** `ask_llm`
 - **Title:** `Ask LLM`
 - **Description:** `Ask the connected LLM a question using sampling`
-- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -169,7 +134,7 @@ Icons should be:
 - **Name:** `confirm_action`
 - **Title:** `Confirm Action`
 - **Description:** `Request user confirmation before proceeding`
-- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -193,7 +158,7 @@ Icons should be:
 - **Name:** `get_feedback`
 - **Title:** `Get Feedback`
 - **Description:** `Request feedback from the user`
-- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
+- **Annotations:** `{ readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -246,6 +211,7 @@ Icons should be:
 
 ### 1. code_review
 - **Name:** `code_review`
+- **Title:** `Code Review`
 - **Description:** `Review code for potential improvements`
 - **Arguments:**
 ```json
@@ -260,6 +226,7 @@ Icons should be:
 
 ### 2. greet
 - **Name:** `greet`
+- **Title:** `Greeting Prompt`
 - **Description:** `Generate a greeting message`
 - **Arguments:**
 ```json
@@ -276,3 +243,17 @@ Icons should be:
   }
 ]
 ```
+
+---
+
+## Notes on SDK Differences
+
+Some differences are acceptable due to SDK limitations:
+
+1. **`inputSchema.title`** on the schema itself (e.g., `"helloArguments"`) - SDK generated, can vary
+2. **`inputSchema.$schema`** - SDK generated, can vary
+3. **`outputSchema`** - Optional, SDK-dependent
+4. **`execution`** field - SDK-specific
+5. **Icon format** - Some SDKs may not support base64 PNG icons
+6. **`capabilities`** in initialize - SDK-dependent features
+7. **`serverInfo.version`** - Can vary per implementation
