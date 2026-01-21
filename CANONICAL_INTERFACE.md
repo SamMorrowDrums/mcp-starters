@@ -3,9 +3,16 @@
 All MCP starter repos should expose **exactly** this interface for consistency across languages.
 
 ## Schema Conventions
-- **Use BOTH `title` AND `description`** on all properties
-  - `title`: Human-readable label (e.g., "Task Name")
-  - `description`: Model-readable explanation (e.g., "Name for this task")
+
+### Tools
+- **`name`**: Tool identifier (snake_case, e.g., `get_weather`)
+- **`title`**: Human-readable name (e.g., "Get Weather")
+- **`description`**: Model-readable explanation
+- **`annotations`**: Metadata hints for clients (e.g., `readOnlyHint`, `destructiveHint`)
+- **`outputSchema`**: (Optional) JSON Schema describing the tool's return value
+
+### Input Schema Properties
+- Use `description` field only (NOT `title`)
 - Use `camelCase` for parameter names (e.g., `taskName`, `maxTokens`)
 - Include `default` values where applicable
 
@@ -14,7 +21,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 ## Tools (7 total)
 
 ### 1. hello
+- **Name:** `hello`
+- **Title:** `Hello`
 - **Description:** `Say hello to a person`
+- **Annotations:** `{ readOnlyHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -22,7 +32,6 @@ All MCP starter repos should expose **exactly** this interface for consistency a
   "properties": {
     "name": {
       "type": "string",
-      "title": "Name",
       "description": "Name of the person to greet"
     }
   },
@@ -31,7 +40,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 ```
 
 ### 2. get_weather
+- **Name:** `get_weather`
+- **Title:** `Get Weather`
 - **Description:** `Get the current weather for a city`
+- **Annotations:** `{ readOnlyHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -39,16 +51,39 @@ All MCP starter repos should expose **exactly** this interface for consistency a
   "properties": {
     "city": {
       "type": "string",
-      "title": "City",
       "description": "City name to get weather for"
     }
   },
   "required": ["city"]
 }
 ```
+- **Output Schema:**
+```json
+{
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": "string",
+      "description": "City name"
+    },
+    "temperature": {
+      "type": "number",
+      "description": "Temperature in Celsius"
+    },
+    "conditions": {
+      "type": "string",
+      "description": "Weather conditions description"
+    }
+  },
+  "required": ["city", "temperature", "conditions"]
+}
+```
 
 ### 3. long_task
+- **Name:** `long_task`
+- **Title:** `Long Task`
 - **Description:** `Simulate a long-running task with progress updates`
+- **Annotations:** `{ readOnlyHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -56,12 +91,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
   "properties": {
     "taskName": {
       "type": "string",
-      "title": "Task Name",
       "description": "Name for this task"
     },
     "steps": {
       "type": "integer",
-      "title": "Steps",
       "description": "Number of steps to simulate",
       "default": 5
     }
@@ -71,7 +104,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 ```
 
 ### 4. load_bonus_tool
+- **Name:** `load_bonus_tool`
+- **Title:** `Load Bonus Tool`
 - **Description:** `Dynamically register a new bonus tool`
+- **Annotations:** `{ readOnlyHint: false }`
 - **Input Schema:**
 ```json
 {
@@ -82,7 +118,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 ```
 
 ### 5. ask_llm
+- **Name:** `ask_llm`
+- **Title:** `Ask LLM`
 - **Description:** `Ask the connected LLM a question using sampling`
+- **Annotations:** `{ readOnlyHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -90,12 +129,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
   "properties": {
     "prompt": {
       "type": "string",
-      "title": "Prompt",
       "description": "The question or prompt to send to the LLM"
     },
     "maxTokens": {
       "type": "integer",
-      "title": "Max Tokens",
       "description": "Maximum tokens in response",
       "default": 100
     }
@@ -105,7 +142,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 ```
 
 ### 6. confirm_action
+- **Name:** `confirm_action`
+- **Title:** `Confirm Action`
 - **Description:** `Request user confirmation before proceeding`
+- **Annotations:** `{ readOnlyHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -113,12 +153,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
   "properties": {
     "action": {
       "type": "string",
-      "title": "Action",
       "description": "Description of the action to confirm"
     },
     "destructive": {
       "type": "boolean",
-      "title": "Destructive",
       "description": "Whether the action is destructive",
       "default": false
     }
@@ -128,7 +166,10 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 ```
 
 ### 7. get_feedback
+- **Name:** `get_feedback`
+- **Title:** `Get Feedback`
 - **Description:** `Request feedback from the user`
+- **Annotations:** `{ readOnlyHint: true }`
 - **Input Schema:**
 ```json
 {
@@ -136,7 +177,6 @@ All MCP starter repos should expose **exactly** this interface for consistency a
   "properties": {
     "question": {
       "type": "string",
-      "title": "Question",
       "description": "The question to ask the user"
     }
   },
@@ -188,7 +228,6 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 [
   {
     "name": "code",
-    "title": "Code",
     "description": "The code to review",
     "required": true
   }
@@ -203,13 +242,11 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 [
   {
     "name": "name",
-    "title": "Name",
     "description": "Name of the person to greet",
     "required": true
   },
   {
     "name": "style",
-    "title": "Style",
     "description": "Greeting style (formal/casual)",
     "required": false
   }
