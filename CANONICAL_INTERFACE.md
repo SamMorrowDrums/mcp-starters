@@ -17,19 +17,28 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - Include `default` values where applicable
 
 ### Icons
-Tools MAY include an icon in annotations. Use consistent emoji icons across all implementations:
+Tools should include icons as PNG files stored in the repository (e.g., `icons/hello.png`). At application startup, serialize these to data URIs:
 
-| Tool | Icon |
-|------|------|
-| `hello` | 👋 |
-| `get_weather` | 🌤️ |
-| `long_task` | ⏳ |
-| `load_bonus_tool` | 🔧 |
-| `ask_llm` | 🤖 |
-| `confirm_action` | ✅ |
-| `get_feedback` | 💬 |
+```
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+```
 
-If the SDK supports icons, include them. If not, omit (don't use base64 images as fallback).
+Use consistent icon files across all implementations:
+
+| Tool | Icon File | Suggested Image |
+|------|-----------|-----------------|
+| `hello` | `icons/hello.png` | Waving hand |
+| `get_weather` | `icons/weather.png` | Sun/cloud |
+| `long_task` | `icons/task.png` | Hourglass/timer |
+| `load_bonus_tool` | `icons/bonus.png` | Wrench/tool |
+| `ask_llm` | `icons/llm.png` | Robot/brain |
+| `confirm_action` | `icons/confirm.png` | Checkmark |
+| `get_feedback` | `icons/feedback.png` | Speech bubble |
+
+Icons should be:
+- 32x32 or 64x64 pixels
+- PNG format with transparency
+- Loaded once at startup and cached as data URIs
 
 ---
 
@@ -39,7 +48,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `hello`
 - **Title:** `Hello`
 - **Description:** `Say hello to a person`
-- **Annotations:** `{ readOnlyHint: true, icon: "👋" }`
+- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
@@ -58,7 +67,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `get_weather`
 - **Title:** `Get Weather`
 - **Description:** `Get the current weather for a city`
-- **Annotations:** `{ readOnlyHint: true, icon: "🌤️" }`
+- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
@@ -98,7 +107,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `long_task`
 - **Title:** `Long Task`
 - **Description:** `Simulate a long-running task with progress updates`
-- **Annotations:** `{ readOnlyHint: true, icon: "⏳" }`
+- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
@@ -122,7 +131,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `load_bonus_tool`
 - **Title:** `Load Bonus Tool`
 - **Description:** `Dynamically register a new bonus tool`
-- **Annotations:** `{ readOnlyHint: false, icon: "🔧" }`
+- **Annotations:** `{ readOnlyHint: false, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
@@ -136,7 +145,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `ask_llm`
 - **Title:** `Ask LLM`
 - **Description:** `Ask the connected LLM a question using sampling`
-- **Annotations:** `{ readOnlyHint: true, icon: "🤖" }`
+- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
@@ -160,7 +169,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `confirm_action`
 - **Title:** `Confirm Action`
 - **Description:** `Request user confirmation before proceeding`
-- **Annotations:** `{ readOnlyHint: true, icon: "✅" }`
+- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
@@ -184,7 +193,7 @@ If the SDK supports icons, include them. If not, omit (don't use base64 images a
 - **Name:** `get_feedback`
 - **Title:** `Get Feedback`
 - **Description:** `Request feedback from the user`
-- **Annotations:** `{ readOnlyHint: true, icon: "💬" }`
+- **Annotations:** `{ readOnlyHint: true, icon: "data:image/png;base64,..." }`
 - **Input Schema:**
 ```json
 {
