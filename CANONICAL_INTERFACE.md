@@ -16,6 +16,21 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - Use `camelCase` for parameter names (e.g., `taskName`, `maxTokens`)
 - Include `default` values where applicable
 
+### Icons
+Tools MAY include an icon in annotations. Use consistent emoji icons across all implementations:
+
+| Tool | Icon |
+|------|------|
+| `hello` | 👋 |
+| `get_weather` | 🌤️ |
+| `long_task` | ⏳ |
+| `load_bonus_tool` | 🔧 |
+| `ask_llm` | 🤖 |
+| `confirm_action` | ✅ |
+| `get_feedback` | 💬 |
+
+If the SDK supports icons, include them. If not, omit (don't use base64 images as fallback).
+
 ---
 
 ## Tools (7 total)
@@ -24,7 +39,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `hello`
 - **Title:** `Hello`
 - **Description:** `Say hello to a person`
-- **Annotations:** `{ readOnlyHint: true }`
+- **Annotations:** `{ readOnlyHint: true, icon: "👋" }`
 - **Input Schema:**
 ```json
 {
@@ -43,7 +58,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `get_weather`
 - **Title:** `Get Weather`
 - **Description:** `Get the current weather for a city`
-- **Annotations:** `{ readOnlyHint: true }`
+- **Annotations:** `{ readOnlyHint: true, icon: "🌤️" }`
 - **Input Schema:**
 ```json
 {
@@ -83,7 +98,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `long_task`
 - **Title:** `Long Task`
 - **Description:** `Simulate a long-running task with progress updates`
-- **Annotations:** `{ readOnlyHint: true }`
+- **Annotations:** `{ readOnlyHint: true, icon: "⏳" }`
 - **Input Schema:**
 ```json
 {
@@ -107,7 +122,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `load_bonus_tool`
 - **Title:** `Load Bonus Tool`
 - **Description:** `Dynamically register a new bonus tool`
-- **Annotations:** `{ readOnlyHint: false }`
+- **Annotations:** `{ readOnlyHint: false, icon: "🔧" }`
 - **Input Schema:**
 ```json
 {
@@ -121,7 +136,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `ask_llm`
 - **Title:** `Ask LLM`
 - **Description:** `Ask the connected LLM a question using sampling`
-- **Annotations:** `{ readOnlyHint: true }`
+- **Annotations:** `{ readOnlyHint: true, icon: "🤖" }`
 - **Input Schema:**
 ```json
 {
@@ -145,7 +160,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `confirm_action`
 - **Title:** `Confirm Action`
 - **Description:** `Request user confirmation before proceeding`
-- **Annotations:** `{ readOnlyHint: true }`
+- **Annotations:** `{ readOnlyHint: true, icon: "✅" }`
 - **Input Schema:**
 ```json
 {
@@ -169,7 +184,7 @@ All MCP starter repos should expose **exactly** this interface for consistency a
 - **Name:** `get_feedback`
 - **Title:** `Get Feedback`
 - **Description:** `Request feedback from the user`
-- **Annotations:** `{ readOnlyHint: true }`
+- **Annotations:** `{ readOnlyHint: true, icon: "💬" }`
 - **Input Schema:**
 ```json
 {
