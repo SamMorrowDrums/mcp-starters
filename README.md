@@ -56,7 +56,7 @@ Every repo includes DevContainers, VS Code tasks, and live reload. Clone → ope
 | 🐹 Go | `go run ./cmd/stdio` | `air` |
 | 🦀 Rust | `cargo run --bin mcp-rust-starter-stdio` | `cargo watch` |
 | 💜 C# | `dotnet run -- --stdio` | `dotnet watch run` |
-| 🟣 Kotlin | `./gradlew shadowJar && java -jar build/libs/mcp-kotlin-starter-1.0.0-all.jar` | `./gradlew runStdio --continuous` |
+| 🟣 Kotlin | `./gradlew fatJar && java -jar build/libs/mcp-kotlin-starter-1.0.0-all.jar` | `./gradlew runStdio --continuous` |
 | 🐘 PHP | `composer install && php bin/server-stdio.php` | — |
 
 ## ✂️ Making It Your Own
@@ -69,9 +69,20 @@ These starters are designed to be trimmed down. To build your own server:
 
 The code is well-commented to explain MCP concepts — read the comments to understand what each piece does and why.
 
-## 🔧 Server Instructions
+## 🔌 Connecting to MCP Clients
 
-Each server includes concise [server instructions](https://modelcontextprotocol.io/docs/concepts/servers#server-instructions) — short text sent during initialization that helps AI clients understand how to use the server. Instructions should focus on **workflows and multi-tool patterns**, not enumerate features (clients discover those via `tools/list`, `resources/list`, etc.).
+Each repo includes a `.vscode/mcp.json` that works out of the box with VS Code / GitHub Copilot. For other clients, add the stdio command to their MCP config:
+
+| Client | Config Location | Docs |
+|--------|----------------|------|
+| **VS Code / Copilot** | `.vscode/mcp.json` (already included) | [VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
+| **Copilot CLI** | `~/.copilot/mcp-config.json` | [Copilot CLI MCP docs](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers) |
+| **Claude Desktop** | `claude_desktop_config.json` | [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) |
+| **Claude Code** | `claude code mcp add` CLI | [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) |
+| **Cursor** | `~/.cursor/mcp.json` | [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) |
+| **Windsurf** | `~/.codeium/windsurf/mcp_config.json` | [Windsurf MCP docs](https://docs.windsurf.com/windsurf/mcp) |
+
+All clients use a similar JSON format — point the `command` and `args` at the stdio entrypoint for your language (see Quick Start table above).
 
 ## ⚠️ SDK-Level Differences
 
