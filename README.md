@@ -6,15 +6,17 @@ Pick your language, clone the repo, and start building. Each server implements t
 
 ## 🗂️ Choose Your Language
 
-| Language | Repository | SDK |
-|----------|------------|-----|
-| 🐍 **Python** | [mcp-python-starter](https://github.com/SamMorrowDrums/mcp-python-starter) | [python-sdk](https://github.com/modelcontextprotocol/python-sdk) (FastMCP) |
-| 📘 **TypeScript** | [mcp-typescript-starter](https://github.com/SamMorrowDrums/mcp-typescript-starter) | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) |
-| 🐹 **Go** | [mcp-go-starter](https://github.com/SamMorrowDrums/mcp-go-starter) | [go-sdk](https://github.com/modelcontextprotocol/go-sdk) |
-| 🦀 **Rust** | [mcp-rust-starter](https://github.com/SamMorrowDrums/mcp-rust-starter) | [rmcp](https://crates.io/crates/rmcp) |
-| 💜 **C#** | [mcp-csharp-starter](https://github.com/SamMorrowDrums/mcp-csharp-starter) | [csharp-sdk](https://github.com/modelcontextprotocol/csharp-sdk) |
-| 🟣 **Kotlin** | [mcp-kotlin-starter](https://github.com/SamMorrowDrums/mcp-kotlin-starter) | [kotlin-sdk](https://github.com/modelcontextprotocol/kotlin-sdk) |
-| 🐘 **PHP** | [mcp-php-starter](https://github.com/SamMorrowDrums/mcp-php-starter) | [php-sdk](https://github.com/modelcontextprotocol/php-sdk) |
+| Language | Repository | SDK | [Tier](https://modelcontextprotocol.io/community/sdk-tiers) |
+|----------|------------|-----|:----:|
+| 🐍 **Python** | [mcp-python-starter](https://github.com/SamMorrowDrums/mcp-python-starter) | [python-sdk](https://github.com/modelcontextprotocol/python-sdk) (FastMCP) | Tier 1 |
+| 📘 **TypeScript** | [mcp-typescript-starter](https://github.com/SamMorrowDrums/mcp-typescript-starter) | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | Tier 1 |
+| 🐹 **Go** | [mcp-go-starter](https://github.com/SamMorrowDrums/mcp-go-starter) | [go-sdk](https://github.com/modelcontextprotocol/go-sdk) | Tier 1 |
+| 🦀 **Rust** | [mcp-rust-starter](https://github.com/SamMorrowDrums/mcp-rust-starter) | [rust-sdk](https://github.com/modelcontextprotocol/rust-sdk) (rmcp) | TBD |
+| 💜 **C#** | [mcp-csharp-starter](https://github.com/SamMorrowDrums/mcp-csharp-starter) | [csharp-sdk](https://github.com/modelcontextprotocol/csharp-sdk) | Tier 1 |
+| 🟣 **Kotlin** | [mcp-kotlin-starter](https://github.com/SamMorrowDrums/mcp-kotlin-starter) | [kotlin-sdk](https://github.com/modelcontextprotocol/kotlin-sdk) | TBD |
+| 🐘 **PHP** | [mcp-php-starter](https://github.com/SamMorrowDrums/mcp-php-starter) | [php-sdk](https://github.com/modelcontextprotocol/php-sdk) | Tier 3 |
+
+> **SDK Tiers** indicate feature completeness and maintenance commitment. **Tier 1** SDKs have 100% protocol conformance and full support. **Tier 3** and **TBD** SDKs may have gaps — see each repo for documented limitations. [Learn more about tiers →](https://modelcontextprotocol.io/community/sdk-tiers)
 
 ## 🎯 What You'll Learn
 
@@ -73,7 +75,7 @@ Each server includes concise [server instructions](https://modelcontextprotocol.
 
 ## ⚠️ SDK-Level Differences
 
-All servers implement the same interface, but some differences exist due to SDK behavior. These are documented so you know what's a language choice vs. an SDK constraint:
+All servers implement the same interface, but some differences exist due to SDK behavior — particularly for **Tier 3** and **TBD** SDKs which may not yet have full protocol conformance. These are documented so you know what's a language choice vs. an SDK constraint:
 
 | Difference | Cause | Impact |
 |-----------|-------|--------|
@@ -83,7 +85,7 @@ All servers implement the same interface, but some differences exist due to SDK 
 | `prompts.listChanged` / `resources.listChanged` | Some SDKs hardcode `true` when handlers are registered (e.g., TypeScript) | Functionally equivalent |
 | Resource templates (Kotlin) | Kotlin SDK lacks public `addResourceTemplate` API — templates registered as static resources | See [SDK_LIMITATIONS.md](https://github.com/SamMorrowDrums/mcp-kotlin-starter/blob/main/SDK_LIMITATIONS.md) |
 
-For full details, see [CANONICAL_INTERFACE.md](./CANONICAL_INTERFACE.md) and each repo's `SDK_LIMITATIONS.md` (if present).
+Tier 1 SDKs (Python, TypeScript, Go, C#) have the fewest differences. Lower-tier SDKs may have additional gaps — check each repo's `SDK_LIMITATIONS.md` for details.
 
 ## 📋 Cross-Server Conformance
 
