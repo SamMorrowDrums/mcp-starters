@@ -152,27 +152,61 @@ jobs:
       - name: Run cross-server diff
         id: diff
         run: |
-          # Run diff and capture output
           set +e
-          npx mcp-server-diff@latest -c diff-config.json -o json -q > diff-output.json 2>&1
+          npx mcp-server-diff@latest -c diff-config.json -o json -q > diff-output.json 2>diff-cli.log
           exit_code=$?
           set -e
-          
-          # Parse results
-          if [ $exit_code -eq 0 ]; then
-            echo "has_diffs=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_diffs=true" >> $GITHUB_OUTPUT
+
+          if ! node - "$exit_code" <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const exitCode = Number(process.argv[2]);
+          const output = JSON.parse(fs.readFileSync('diff-output.json', 'utf8'));
+
+          if (!Array.isArray(output.results) || output.results.length === 0 || !output.summary) {
+            throw new Error('Diff CLI returned an invalid JSON result');
+          }
+
+          const hasDiffs = output.results.some((result) => result.hasDifferences);
+          const errors = output.results.filter((result) => result.error);
+          if (errors.length > 0) {
+            throw new Error(`Diff CLI could not probe all servers: ${errors.map((result) => result.target).join(', ')}`);
+          }
+          if (exitCode !== (hasDiffs ? 1 : 0)) {
+            throw new Error(`Diff CLI exit code ${exitCode} did not match its results`);
+          }
+          if (
+            output.summary.total !== output.results.length ||
+            output.summary.different !== output.results.filter((result) => result.hasDifferences).length ||
+            output.summary.matching !== output.results.filter((result) => !result.hasDifferences).length
+          ) {
+            throw new Error('Diff CLI summary did not match its results');
+          }
+
+          const digest = crypto
+            .createHash('sha256')
+            .update(JSON.stringify({ results: output.results, summary: output.summary }))
+            .digest('hex');
+          fs.appendFileSync(
+            process.env.GITHUB_OUTPUT,
+            `has_diffs=${hasDiffs}\ndiff_hash=${digest}\n`,
+          );
+          NODE
+          then
+            cat diff-cli.log >&2
+            exit 1
           fi
-          
-          # Create hash of diff content for comparison
-          diff_hash=$(cat diff-output.json | sha256sum | cut -d' ' -f1)
-          echo "diff_hash=$diff_hash" >> $GITHUB_OUTPUT
-          
-          # Generate markdown report
-          npx mcp-server-diff@latest -c diff-config.json -o markdown -q > diff-report.md 2>&1 || true
-          
-          # Add to step summary
+
+          set +e
+          npx mcp-server-diff@latest -c diff-config.json -o markdown -q > diff-report.md 2>diff-report-cli.log
+          report_exit_code=$?
+          set -e
+          if [ "$report_exit_code" -ne "$exit_code" ] || ! grep -q '^## Summary$' diff-report.md; then
+            cat diff-report-cli.log >&2
+            echo "Diff CLI failed to generate a complete markdown report" >&2
+            exit 1
+          fi
+
           cat diff-report.md >> $GITHUB_STEP_SUMMARY
 
       - name: Upload diff report
@@ -204,13 +238,12 @@ jobs:
             
             if (issues.data.length > 0) {
               core.setOutput('issue_number', issues.data[0].number);
-              core.setOutput('issue_body_hash', require('crypto')
-                .createHash('sha256')
-                .update(issues.data[0].body || '')
-                .digest('hex'));
+              const issueBody = issues.data[0].body || '';
+              const diffHash = issueBody.match(/^\*Diff hash: ([0-9a-f]{64})\*$/m);
+              core.setOutput('issue_diff_hash', diffHash ? diffHash[1] : '');
             } else {
               core.setOutput('issue_number', '');
-              core.setOutput('issue_body_hash', '');
+              core.setOutput('issue_diff_hash', '');
             }
 
       - name: Download diff report
@@ -239,7 +272,7 @@ jobs:
             `;
             
             const existingIssue = '${{ steps.find_issue.outputs.issue_number }}';
-            const existingHash = '${{ steps.find_issue.outputs.issue_body_hash }}';
+            const existingHash = '${{ steps.find_issue.outputs.issue_diff_hash }}';
             const newHash = '${{ needs.diff.outputs.diff_hash }}';
             
             if (existingIssue && existingHash !== newHash) {
